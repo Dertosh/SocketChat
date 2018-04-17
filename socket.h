@@ -7,7 +7,16 @@ class socket : public QAbstractSocket
 {
 
 public:
-    socket(SocketType socketType = UnknownSocketType, QObject *parent = 0);
+    enum SocketType {
+        TcpSocket,
+        UdpSocket,
+        SctpSocket,
+        MySocket,
+        UnknownSocketType = -1
+    };
+    Q_ENUM(SocketType)
+
+    socket(SocketType socketType = MySocket, QObject *parent = nullptr);
 };
 
 #endif // SOCKET_H
