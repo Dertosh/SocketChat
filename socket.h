@@ -17,7 +17,7 @@ public:
     };
     Q_ENUM(SocketType)
 
-    socket(SocketType socketType = MySocket, QObject *parent = nullptr);
+    Socket(SocketType socketType = MySocket, QObject *parent = nullptr);
 };
 
 #endif // SOCKET_H
