@@ -3,6 +3,9 @@
 
 #include <QDebug>
 #include <QMainWindow>
+#include <QThread>
+#include "client.h"
+#include "socket.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +20,7 @@ class MainWindow : public QMainWindow {
 
  private:
   Ui::MainWindow *ui;
+  QThread sendThread;
 };
 
 #endif  // MAINWINDOW_H

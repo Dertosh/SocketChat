@@ -25,12 +25,14 @@ SOURCES += \
 	main.cpp \
 	mainwindow.cpp \
     socket.cpp \
-    mychat.cpp
+    mychat.cpp \
+    client.cpp
 
 HEADERS += \
 	mainwindow.h \
     socket.h \
-    mychat.h
+    mychat.h \
+    client.h
 
 FORMS += \
 	mainwindow.ui

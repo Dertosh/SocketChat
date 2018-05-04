@@ -19,7 +19,7 @@ class Socket : public QAbstractSocket {
   };
   Q_ENUM(SocketType)
 
-  Socket(int socketNumber, SocketType = MySocket, QObject* = 0);
+  Socket(int, SocketType = MySocket, QObject* = 0);
 
   ~Socket() {}
 };
