@@ -15,7 +15,7 @@ class Client : public QObject {
   void error(QString err);
 
  private:
-  int _port = 0;
+  quint16 _port = 0;
 };
 
 #endif  // CLIENT_H

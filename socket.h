@@ -4,6 +4,7 @@
 #include <QAbstractSocket>
 #include <QDebug>
 #include <QHostAddress>
+#include <QIODevice>
 #include <QObject>
 
 class Socket : public QAbstractSocket {
@@ -20,6 +21,8 @@ class Socket : public QAbstractSocket {
   Q_ENUM(SocketType)
 
   Socket(int, SocketType = MySocket, QObject* = 0);
+
+  qint64 sendData(const char*, qint64);
 
   ~Socket() {}
 };
