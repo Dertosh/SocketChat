@@ -26,13 +26,17 @@ SOURCES += \
 	mainwindow.cpp \
     socket.cpp \
     mychat.cpp \
-    client.cpp
+    client.cpp \
+    nativesocket.cpp \
+    server.cpp
 
 HEADERS += \
 	mainwindow.h \
     socket.h \
     mychat.h \
-    client.h
+    client.h \
+    nativesocket.h \
+    server.h
 
 FORMS += \
 	mainwindow.ui

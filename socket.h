@@ -7,7 +7,7 @@
 #include <QIODevice>
 #include <QObject>
 
-class Socket : public QAbstractSocket {
+class Q_NETWORK_EXPORT Socket : public QAbstractSocket {
   Q_OBJECT
 
  public:
@@ -20,7 +20,7 @@ class Socket : public QAbstractSocket {
   };
   Q_ENUM(SocketType)
 
-  Socket(int, SocketType = MySocket, QObject* = 0);
+  explicit Socket(int, SocketType = MySocket, QObject* = Q_NULLPTR);
 
   qint64 sendData(const char*, qint64);
 

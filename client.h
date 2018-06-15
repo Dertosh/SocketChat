@@ -1,12 +1,13 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 #include <QObject>
+#include "nativesocket.h"
 #include "socket.h"
 
 class Client : public QObject {
   Q_OBJECT
  public:
-  Client(int = 61111);
+  Client(int = 0);
   ~Client();
  public slots:
   void doWork();
