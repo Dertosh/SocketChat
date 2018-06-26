@@ -20,6 +20,15 @@ class MainWindow : public QMainWindow {
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
+ private slots:
+  void on_sendingButton_pressed();
+
+  void on_TestButton_pressed();
+
+ signals:
+  void TestButton_pressing();
+  void TestButton_unpressing();
+
  private:
   Ui::MainWindow *ui;
   QThread sendThread;

@@ -20,9 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
   connect(&getThread, &QThread::finished, server, &QObject::deleteLater);
   connect(&getThread, SIGNAL(started()), server, SLOT(doWork()));
 
-  sendThread.start();
   getThread.start();
-
+  sendThread.start();
   qDebug() << "threads starts!";
 
   mesgWindow->append("Hellow world!");
@@ -38,6 +37,12 @@ MainWindow::MainWindow(QWidget *parent)
   int t = 'А';
   mesgWindow->append(QString::number(t));
   QString test = QString::fromLocal8Bit("Почему не работает передача?");
+  connect(ui->sendingButton, SIGNAL(clicked(bool)), client, SLOT(sending()));
+  // connect(ui->sendingButton, SIGNAL(clicked(bool)), client,
+  //        SLOT(setStatusSending(bool)));
+  connect(this, SIGNAL(TestButton_pressing()), server, SLOT(getMSG()));
+  // connect(this, SIGNAL(TestButton_pressing()), server, SLOT(setSending()));
+  connect(this, SIGNAL(TestButton_unpressing()), server, SLOT(setEnding()));
 }
 
 MainWindow::~MainWindow() {
@@ -47,4 +52,23 @@ MainWindow::~MainWindow() {
   getThread.quit();
   sendThread.wait();
   getThread.wait();
+}
+
+void MainWindow::on_sendingButton_pressed() {
+  if (ui->sendingButton->isChecked())
+    ui->sendingButton->setText("Отправить сообщения");
+  else
+    ui->sendingButton->setText("Отправка сообщений");
+}
+
+void MainWindow::on_TestButton_pressed() {
+  if (ui->TestButton->isChecked()) {
+    TestButton_unpressing();
+    qDebug() << "TestButton_unpressing();";
+    ui->TestButton->setText("Прочитать сообщения");
+  } else {
+    TestButton_pressing();
+    qDebug() << "TestButton_pressing()";
+    ui->TestButton->setText("Чтение сообщений");
+  }
 }

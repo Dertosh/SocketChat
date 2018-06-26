@@ -12,14 +12,21 @@ class Server : public QObject {
   ~Server();
 
  signals:
+  void ending();
   void finished();
   void error(QString err);
 
  public slots:
   void doWork();
+  void getMSG();
+  void setEnding(bool status);
+  void setEnding();
+  void setSending();
 
  private:
   quint16 _port = 0;
+  Socket *mySocketGet = NULL;
+  bool statusRead = false;
 };
 
 #endif  // SERVER_H

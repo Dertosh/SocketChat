@@ -11,12 +11,17 @@ class Client : public QObject {
   ~Client();
  public slots:
   void doWork();
+  void setStatusSending(bool status);
+  void sending();
  signals:
   void finished();
   void error(QString err);
+  void isSending();
 
  private:
   quint16 _port = 0;
+  Socket* mySocketSend = NULL;
+  bool statusSend = false;
 };
 
 #endif  // CLIENT_H
