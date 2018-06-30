@@ -8,15 +8,16 @@
 #include <QUdpSocket>
 Q_DECLARE_LOGGING_CATEGORY(logAuthSocket)
 
-class AuthSocket : public QObject {
+class myChat : public QObject {
   Q_OBJECT
 
  public:
-  AuthSocket(quint16 port);
-  ~AuthSocket();
+  myChat(quint16 port);
+  ~myChat();
 
  signals:
   void ready();
+  void showMSG(QString);
 
  public slots:
   void send(QString str, qint8 typeMSG);
@@ -26,7 +27,7 @@ class AuthSocket : public QObject {
   void run();
 
  private:
-  QUdpSocket *authSocket = nullptr;
+  QUdpSocket *chatSocket = nullptr;
   quint16 _port;
   bool m_running;
 };
