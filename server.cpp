@@ -2,31 +2,34 @@
 #include <QEventLoop>
 #include <QThread>
 #include "socket.h"
+Q_LOGGING_CATEGORY(logCategoryServer, "Server")
 
-Server::Server(QObject* parent, size_t port) : QObject(parent) { _port = port; }
+Server::Server(size_t port) {
+  _port = port;
+  serverSocket = new QTcpServer();
+  QUdpSocket *authSocket = new QUdpSocket();
+  // authSocket->bind(QHostAddress::Any, _port);
+  connect(authSocket, SIGNAL(readyRead()), SLOT(read()));
+}
 
 Server::~Server() {
-  mySocketGet->disconnectFromHost();
-  mySocketGet->close();
-  delete mySocketGet;
+  serverSocket->disconnect();
+  serverSocket->close();
+  delete serverSocket;
   qDebug("Server: Exit");
 }
 
 void Server::doWork() {
-  // NativeSocket* sok = new NativeSocket();
-  // sok->sendMSG();
-  mySocketGet = new Socket(2);
-  qDebug() << "server: bind "
-           << mySocketGet->bind(QHostAddress::Any, _port,
-                                QAbstractSocket::ShareAddress);
-  mySocketGet->setSocketDescriptor(Socket::MySocket, Socket::ConnectedState,
-                                   Socket::ReadOnly);
-  qDebug() << "server: connect status" << mySocketGet->waitForConnected(20000);
+  // qDebug() << "Server: connect status" << authSocket->waitForConnected();
+
+  // qDebug() << "Server: Listening:"
+  //         << serverSocket->listen(QHostAddress::Any, _port);
+  // qDebug() << "server: connect status" <<
+  // serverSocket->waitForConnected(20000);
   // qDebug() << "server: " <<
   // mySocketGet->waitForConnected(10000);
   // qDebug() << "window " <<
   // mySocketGet->open(QIODevice::ReadOnly);
-  qDebug() << "server: " << mySocketGet->state();
   qDebug() << "server Hellow world!";
   QString buff = "bindStatus = ";
   // mesgWindow->append(answer);
@@ -34,26 +37,22 @@ void Server::doWork() {
   // mySocketGet->open(QIODevice::ReadOnly);
   // mySocketGet->readyRead();
   QString test = QString::fromLocal8Bit("Почему не работает передача?");
-  // for (int i = 1; i <= 50; i++) {
+  // emit finished();
   QEventLoop loop;
-  loop.connect(this, SIGNAL(finished()), SLOT(quit()));
+  connect(this, SIGNAL(finished()), &loop, SLOT(quit()));
   loop.exec();
+  qDebug(logCategoryServer()) << "end loop";
 }
 
-void Server::getMSG() {
-  qDebug() << "server: " << mySocketGet->state();
-  this->statusRead = true;
-  // qDebug() << "server: " << mySocketGet->peerAddress();
-  while (this->statusRead) {
-    QThread::sleep(1);
-    qDebug() << "Client: test msg" << this->statusRead;
-    if (!mySocketGet->waitForReadyRead(100000)) continue;
-    QByteArray arr = mySocketGet->readLine();
-    mySocketGet->waitForBytesWritten(100000);
-    // qDebug() << arr;
-    qDebug() << "Server: new ";  //<< QString::number(i);
-    qDebug() << "Server: text: " << QString::fromLocal8Bit(arr);
-  };
+void Server::read() {
+  qDebug(logCategoryServer()) << "reading...";
+  qDebug(logCategoryServer()) << "Staus - " << authSocket->errorString();
+  QByteArray datagram;
+  if (authSocket->hasPendingDatagrams()) return;
+  datagram.resize(authSocket->pendingDatagramSize());
+  QHostAddress *address = new QHostAddress();
+  authSocket->readDatagram(datagram.data(), datagram.size());
+  qDebug(logCategoryServer()) << "read -" << datagram.data();
 }
 
 void Server::setEnding(bool status) {

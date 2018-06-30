@@ -25,18 +25,18 @@ SOURCES += \
 	main.cpp \
 	mainwindow.cpp \
     socket.cpp \
-    mychat.cpp \
     client.cpp \
     nativesocket.cpp \
-    server.cpp
+    server.cpp \
+    authsocket.cpp
 
 HEADERS += \
 	mainwindow.h \
     socket.h \
-    mychat.h \
     client.h \
     nativesocket.h \
-    server.h
+    server.h \
+    authsocket.h
 
 FORMS += \
 	mainwindow.ui

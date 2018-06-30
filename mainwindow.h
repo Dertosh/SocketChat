@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QMainWindow>
 #include <QThread>
+#include "authsocket.h"
 #include "client.h"
 #include "server.h"
 #include "socket.h"
@@ -25,14 +26,18 @@ class MainWindow : public QMainWindow {
 
   void on_TestButton_pressed();
 
+  void on_sendMSGButton_released();
+
  signals:
   void TestButton_pressing();
   void TestButton_unpressing();
+  void sendMSGClient(QString, qint8);
 
  private:
   Ui::MainWindow *ui;
   QThread sendThread;
   QThread getThread;
+  QThread authTheard;
 };
 
 #endif  // MAINWINDOW_H
