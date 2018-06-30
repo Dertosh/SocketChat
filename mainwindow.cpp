@@ -10,15 +10,16 @@ MainWindow::MainWindow(QWidget *parent)
   qDebug("nickname");
   QTextBrowser *mesgWindow = ui->mesgOut;
 
-  myChat *authSocket = new myChat(_port);
-  authSocket->moveToThread(&authTheard);
-  connect(this, SIGNAL(sendMSGClient(QString, qint8)), authSocket,
+  myChat *chatSocket = new myChat(_port);
+  chatSocket->moveToThread(&authTheard);
+  connect(this, SIGNAL(sendMSGClient(QString, qint8)), chatSocket,
           SLOT(send(QString, qint8)));
-  connect(&authTheard, SIGNAL(finished()), authSocket, SLOT(deleteLater()));
-  connect(&authTheard, SIGNAL(finished()), authSocket, SLOT(stop()));
-  connect(&authTheard, SIGNAL(started()), authSocket, SLOT(process()));
-  connect(authSocket, SIGNAL(showMSG(QString)), ui->mesgOut,
+  connect(&authTheard, SIGNAL(finished()), chatSocket, SLOT(deleteLater()));
+  connect(&authTheard, SIGNAL(finished()), chatSocket, SLOT(stop()));
+  connect(&authTheard, SIGNAL(started()), chatSocket, SLOT(process()));
+  connect(chatSocket, SIGNAL(showMSG(QString)), ui->mesgOut,
           SLOT(append(QString)));
+  connect(chatSocket, SIGNAL(showMSG(QString)), ui->mesgOut, SLOT(app));
 
   authTheard.start();
   qDebug() << "threads starts!";
@@ -42,7 +43,7 @@ void MainWindow::on_sendMSGButton_released() {
   }
 }
 
-void MainWindow::addText(QString text) {}
+// void MainWindow::addText(QString text) {}
 
 void MainWindow::on_lineMessege_editingFinished() {
   if (ui->lineMessege->text().count() > 0) {

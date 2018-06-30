@@ -18,7 +18,7 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
  private slots:
-  void addText(QString);
+  // void addText(QString);
   void on_sendMSGButton_released();
 
   void on_lineMessege_editingFinished();
@@ -28,7 +28,7 @@ class MainWindow : public QMainWindow {
 
  private:
   Ui::MainWindow *ui;
-  QThread authTheard;
+  QThread chatTheard;
 };
 
 #endif  // MAINWINDOW_H

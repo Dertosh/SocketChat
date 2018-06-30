@@ -18,6 +18,7 @@ class myChat : public QObject {
  signals:
   void ready();
   void showMSG(QString);
+  void showPersonalMSG(QString);
 
  public slots:
   void send(QString str, qint8 typeMSG);
