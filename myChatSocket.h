@@ -6,7 +6,7 @@
 #include <QLoggingCategory>
 #include <QObject>
 #include <QUdpSocket>
-Q_DECLARE_LOGGING_CATEGORY(logAuthSocket)
+Q_DECLARE_LOGGING_CATEGORY(logMyChat)
 
 class myChat : public QObject {
   Q_OBJECT

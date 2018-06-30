@@ -1,11 +1,15 @@
 ﻿#include "myChatSocket.h"
-Q_LOGGING_CATEGORY(logAuthSocket, "AuthSocket")
+Q_LOGGING_CATEGORY(logMyChat, "myChat")
 
 myChat::myChat(quint16 port) { _port = port; }
+myChat::~myChat() {
+  chatSocket->close();
+  qDebug(logMyChat()) << "close";
+};
 
 void myChat::send(QString str, qint8 typeMSG) {
-  qDebug(logAuthSocket()) << "port" << QString::number(chatSocket->localPort());
-  qDebug(logAuthSocket()) << "Sending...";
+  qDebug(logMyChat()) << "port" << QString::number(chatSocket->localPort());
+  qDebug(logMyChat()) << "Sending...";
   QByteArray data;
   QDataStream out(&data, QIODevice::WriteOnly);
   out << qint64(0);
@@ -14,16 +18,15 @@ void myChat::send(QString str, qint8 typeMSG) {
   out.device()->seek(qint64(0));
   out << qint64(data.size() - sizeof(qint64));
   chatSocket->writeDatagram(data, QHostAddress::Broadcast, _port);
-  qDebug(logAuthSocket()) << "Sended";
+  qDebug(logMyChat()) << "Sended";
 }
 
 void myChat::read() {
-  qDebug(logAuthSocket()) << "reading...";
-  qDebug(logAuthSocket()) << "read status" << chatSocket->waitForReadyRead();
+  qDebug(logMyChat()) << "reading...";
   QByteArray datagram;
   if (!chatSocket->hasPendingDatagrams()) {
-    qDebug(logAuthSocket()) << "no datagrams";
-    qDebug(logAuthSocket()) << "Staus - " << chatSocket->error();
+    qDebug(logMyChat()) << "no datagrams";
+    qDebug(logMyChat()) << "Staus - " << chatSocket->error();
     return;
   }
   datagram.resize(chatSocket->pendingDatagramSize());
@@ -42,7 +45,7 @@ void myChat::read() {
   QString str;
   in >> str;
   emit showMSG(str);
-  qDebug(logAuthSocket()) << "type:" << type << "read :" << str;
+  qDebug(logMyChat()) << "type:" << type << "read :" << str;
 }
 
 void myChat::process() {
