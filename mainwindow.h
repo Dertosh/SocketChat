@@ -1,9 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QDebug>
+//#include <QDebug>
 #include <QMainWindow>
+#include <QTextCodec>
 #include <QThread>
+#include <QtDebug>
 #include "myChatSocket.h"
 
 namespace Ui {

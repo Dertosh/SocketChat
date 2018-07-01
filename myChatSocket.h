@@ -12,7 +12,7 @@ class myChat : public QObject {
   Q_OBJECT
 
  public:
-  myChat(quint16 port);
+  myChat(QString nickname, quint16 port);
   ~myChat();
 
  signals:
@@ -28,8 +28,9 @@ class myChat : public QObject {
   void run();
 
  private:
-  QUdpSocket *chatSocket = nullptr;
-  quint16 _port;
+  QUdpSocket *chatSocket = nullptr;  //Сокет для приема и передачи сообщений
+  quint16 _port;      //порт сокета
+  QString _nickname;  //Имя пользователя
   bool m_running;
 };
 

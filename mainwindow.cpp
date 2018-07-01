@@ -1,39 +1,41 @@
 ﻿#include "mainwindow.h"
-#include <QtDebug>
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
+
   QString nickname = "Batman";
   quint16 _port = 7010;
-  qDebug("nickname");
   QTextBrowser *mesgWindow = ui->mesgOut;
 
-  myChat *chatSocket = new myChat(_port);
-  chatSocket->moveToThread(&authTheard);
+  myChat *chatSocket = new myChat(nickname, _port);
+  chatSocket->moveToThread(&chatTheard);
   connect(this, SIGNAL(sendMSGClient(QString, qint8)), chatSocket,
           SLOT(send(QString, qint8)));
-  connect(&authTheard, SIGNAL(finished()), chatSocket, SLOT(deleteLater()));
-  connect(&authTheard, SIGNAL(finished()), chatSocket, SLOT(stop()));
-  connect(&authTheard, SIGNAL(started()), chatSocket, SLOT(process()));
+  connect(&chatTheard, SIGNAL(finished()), chatSocket, SLOT(deleteLater()));
+  connect(&chatTheard, SIGNAL(finished()), chatSocket, SLOT(stop()));
+  connect(&chatTheard, SIGNAL(started()), chatSocket, SLOT(process()));
   connect(chatSocket, SIGNAL(showMSG(QString)), ui->mesgOut,
           SLOT(append(QString)));
-  connect(chatSocket, SIGNAL(showMSG(QString)), ui->mesgOut, SLOT(app));
+  // connect(chatSocket, SIGNAL(showMSG(QString)), ui->mesgOut, SLOT(app));
 
-  authTheard.start();
+  chatTheard.start();
   qDebug() << "threads starts!";
 
-  mesgWindow->append("Hellow world!");
-  mesgWindow->append("Port: " + QString::number(_port));
-  QString test = QString::fromLocal8Bit("Почему не работает передача?");
+  QString helloMSGport =
+      QString::fromLocal8Bit("Сокет чата запущен на потру: ");
+  // mesgWindow->append("<div align=\"center\"><green>" + helloMSGport +
+  //                   QString::number(_port) + "</green></div>");
+  mesgWindow->insertHtml("<div align=\"center\"><green>" + helloMSGport +
+                         QString::number(_port) + "</green></div><br>");
 }
 
 MainWindow::~MainWindow() {
   qDebug() << "close window";
   delete ui;
-  authTheard.quit();
-  authTheard.wait();
+  chatTheard.quit();
+  chatTheard.wait();
 }
 
 void MainWindow::on_sendMSGButton_released() {

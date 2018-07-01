@@ -24,15 +24,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
 	main.cpp \
 	mainwindow.cpp \
-    myChatSocket.cpp
+    myChatSocket.cpp \
+    setsocketsettings.cpp
 
 HEADERS += \
 	mainwindow.h \
-    myChatSocket.h
+    myChatSocket.h \
+    setsocketsettings.h
 
 FORMS += \
-	mainwindow.ui
+	mainwindow.ui \
+    setsocketsettings.ui
 
 CONFIG += mobility
 MOBILITY =
+
+DISTFILES +=
 

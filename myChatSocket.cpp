@@ -1,7 +1,9 @@
 ﻿#include "myChatSocket.h"
 Q_LOGGING_CATEGORY(logMyChat, "myChat")
 
-myChat::myChat(quint16 port) { _port = port; }
+myChat::myChat(QString nickname, quint16 port)
+    : _port(port), _nickname(nickname) {}
+
 myChat::~myChat() {
   chatSocket->close();
   qDebug(logMyChat()) << "close";
@@ -14,6 +16,7 @@ void myChat::send(QString str, qint8 typeMSG) {
   QDataStream out(&data, QIODevice::WriteOnly);
   out << qint64(0);
   out << qint8(typeMSG);
+  out << _nickname;
   out << str;
   out.device()->seek(qint64(0));
   out << qint64(data.size() - sizeof(qint64));
@@ -42,9 +45,17 @@ void myChat::read() {
   if (in.device()->size() - sizeof(qint64) < size) return;
   qint8 type = 0;
   in >> type;
+  QString sender;
+  in >> sender;
   QString str;
   in >> str;
-  emit showMSG(str);
+  QString msg;
+  if (sender == _nickname)
+    msg = "<div style=\"text-align: left\"><font color=\"DarkBlue\">";
+  else
+    msg = "<div style=\"text-align: right\"><font color=\"DarkBlue\">";
+  msg += sender + ": </font>" + str + "</div>";
+  emit showMSG(msg);
   qDebug(logMyChat()) << "type:" << type << "read :" << str;
 }
 
