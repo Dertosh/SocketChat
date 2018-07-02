@@ -25,12 +25,14 @@ SOURCES += \
 	main.cpp \
 	mainwindow.cpp \
     myChatSocket.cpp \
-    setsocketsettings.cpp
+    setsocketsettings.cpp \
+    hamming.cpp
 
 HEADERS += \
 	mainwindow.h \
     myChatSocket.h \
-    setsocketsettings.h
+    setsocketsettings.h \
+    hamming.h
 
 FORMS += \
 	mainwindow.ui \

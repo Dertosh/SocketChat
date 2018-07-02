@@ -24,8 +24,7 @@ int main(int argc, char* argv[]) {
 
   qDebug() << "argc =" << argc << "argv" << *argv;
 
-  bool loadMainWindow = true;
-  MainWindow window;
+  bool loadMainWindow = false;
   if (argc < 2) {
     qDebug() << "show";
     SetSocketSettings settings;
@@ -34,12 +33,18 @@ int main(int argc, char* argv[]) {
     font.setPixelSize(40);
     settings.setFont(font);
 
-    QObject::connect(&settings, SIGNAL(accepted()), &window, SLOT(show()));
-    QObject::connect(&settings, SIGNAL(rejected()), &window,
-                     SLOT(deleteLater()));
+    // QObject::connect(&settings, SIGNAL(accepted()), &window, SLOT(show()));
+    // QObject::connect(&settings, SIGNAL(rejected()), &window,
+    //                 SLOT(deleteLater()));
     settings.show();
-    settings.exec();
+    // qDebug() << "settings.exec() =" << settings.exec();
+    if (settings.exec() != QDialog::Rejected) loadMainWindow = true;
   }
-
+  qDebug() << loadMainWindow;
+  if (loadMainWindow) {
+    MainWindow window;
+    window.show();
+    window.exec();
+  }
   return a.exec();
 }
