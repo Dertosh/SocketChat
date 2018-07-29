@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
   if (loadMainWindow) {
     MainWindow window;
     window.show();
-    window.exec();
+    return a.exec();
   }
-  return a.exec();
+  return 0;
 }
