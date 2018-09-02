@@ -18,8 +18,11 @@ class SetSocketSettings : public QDialog {
   void setFalseSolution();
  signals:
   void closeApp();
+  void getSettings(QString, quint16);
 
  private slots:
+
+  void on_buttonBox_accepted();
 
  private:
   Ui::setSocketSettings *ui;

@@ -7,6 +7,7 @@
 #include <QThread>
 #include <QtDebug>
 #include "myChatSocket.h"
+#include "setsocketsettings.h"
 
 namespace Ui {
 class MainWindow;
@@ -24,6 +25,7 @@ class MainWindow : public QMainWindow {
   void on_sendMSGButton_released();
 
   void on_lineMessege_editingFinished();
+  void run(QString nikname, quint16 port);
 
  signals:
   void sendMSGClient(QString, qint8);
@@ -31,6 +33,8 @@ class MainWindow : public QMainWindow {
  private:
   Ui::MainWindow *ui;
   QThread chatTheard;
+  SetSocketSettings *settings;
+  bool _run = true;
 };
 
 #endif  // MAINWINDOW_H
