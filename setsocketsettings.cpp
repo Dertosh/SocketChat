@@ -19,3 +19,11 @@ void SetSocketSettings::on_buttonBox_accepted() {
   emit getSettings(ui->nicknameLineEdit->text(),
                    ui->portLineEdit->text().toLong());
 }
+
+QString SetSocketSettings::getNickname() {
+  return ui->nicknameLineEdit->text();
+}
+
+quint16 SetSocketSettings::getPort() {
+  return ui->portLineEdit->text().toLong();
+}

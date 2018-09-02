@@ -2,7 +2,6 @@
 #include <QScreen>
 #include "mainwindow.h"
 #include "setsocketsettings.h"
-void test_function();
 
 int main(int argc, char* argv[]) {
 #ifdef Q_OS_WIN32
@@ -13,10 +12,10 @@ int main(int argc, char* argv[]) {
   QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
   qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
   QApplication a(argc, argv);
-  qDebug() << qApp->primaryScreen()->devicePixelRatio();
-  qDebug() << qApp->primaryScreen()->logicalDotsPerInch();
+  // qDebug() << qApp->primaryScreen()->devicePixelRatio();
+  // qDebug() << qApp->primaryScreen()->logicalDotsPerInch();
   QFont font = qApp->font();
-  qDebug() << "PixelSize" << font.pixelSize();
+  // qDebug() << "PixelSize" << font.pixelSize();
   font.setPixelSize(1);
   // font.setPixelSize(qApp->primaryScreen()->logicalDotsPerInch() /
   //                  (qApp->primaryScreen()->devicePixelRatio()));
@@ -25,11 +24,13 @@ int main(int argc, char* argv[]) {
   qDebug() << "argc =" << argc << "argv" << *argv;
 
   bool loadMainWindow = false;
+  QString nickname = "Batman";
+  quint16 port = 7010;
   if (argc < 2) {
-    qDebug() << "show";
+    qDebug() << "show\n";
     SetSocketSettings settings;
     font = settings.font();
-    qDebug() << "PixelSize" << font.pixelSize();
+    // qDebug() << "PixelSize" << font.pixelSize();
     font.setPixelSize(40);
     settings.setFont(font);
 
@@ -38,11 +39,15 @@ int main(int argc, char* argv[]) {
     //                 SLOT(deleteLater()));
     settings.show();
     // qDebug() << "settings.exec() =" << settings.exec();
-    if (settings.exec() != QDialog::Rejected) loadMainWindow = true;
+    if (settings.exec() != QDialog::Rejected) {
+      loadMainWindow = true;
+      nickname = settings.getNickname();
+      port = settings.getPort();
+    };
   }
   qDebug() << loadMainWindow;
   if (loadMainWindow) {
-    MainWindow window;
+    MainWindow window(nickname, port);
     window.show();
     return a.exec();
   }

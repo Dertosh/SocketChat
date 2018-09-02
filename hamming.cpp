@@ -238,7 +238,9 @@ size_t* correctedCode(size_t bin, size_t k, size_t i, size_t* line) {
  * аналог setw
  */
 string setw(int n, size_t size) {
-  string number = to_string(n);
+  std::stringstream temp_stream;
+  temp_stream << n;
+  string number = temp_stream.str();
   string str = "";
   size -= number.size();
   for (size_t i = 0; i < size; i++) str.push_back(' ');
@@ -316,6 +318,6 @@ int cat() {
 
   cout << endl;
 
-  system("pause");
+  // system("pause");
   return 0;
 }

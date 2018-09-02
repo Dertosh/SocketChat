@@ -11,11 +11,15 @@ class SetSocketSettings : public QDialog {
   Q_OBJECT
 
  public:
-  explicit SetSocketSettings(QWidget *parent = 0);
+  explicit SetSocketSettings(QWidget *parent = NULL);
   ~SetSocketSettings();
   bool getDialogSolution();
+
  public slots:
   void setFalseSolution();
+  QString getNickname();
+  quint16 getPort();
+
  signals:
   void closeApp();
   void getSettings(QString, quint16);

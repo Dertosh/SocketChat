@@ -18,6 +18,8 @@ class MainWindow : public QMainWindow {
 
  public:
   explicit MainWindow(QWidget *parent = nullptr);
+  explicit MainWindow(QString nickname, quint16 port,
+                      QWidget *parent = nullptr);
   ~MainWindow();
 
  private slots:
@@ -25,7 +27,7 @@ class MainWindow : public QMainWindow {
   void on_sendMSGButton_released();
 
   void on_lineMessege_editingFinished();
-  void run(QString nikname, quint16 port);
+  // void run(QString nikname, quint16 port);
 
  signals:
   void sendMSGClient(QString, qint8);
