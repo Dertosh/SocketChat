@@ -17,7 +17,7 @@ void myChat::send(QString str, qint8 typeMSG) {
   out << qint64(0);
   out << qint8(typeMSG);
   out << _nickname;
-  out << str;
+  out << encodeMSG(str);
   out.device()->seek(qint64(0));
   out << qint64(data.size() - sizeof(qint64));
   chatSocket->writeDatagram(data, QHostAddress::Broadcast, _port);
@@ -50,19 +50,32 @@ void myChat::read() {
   QString str;
   in >> str;
   QString msg;
-  if (sender == _nickname)
+  qDebug(logMyChat()) << "sender:_" << sender << ", nick:_" << _nickname << ".";
+  if (QString::compare(sender, _nickname))
     msg = "<div style=\"text-align: left\"><font color=\"DarkBlue\">";
   else
-    msg = "<div style=\"text-align: right\"><font color=\"DarkBlue\">";
-  msg += sender + ": </font>" + str + "</div>";
+    msg = "<div style=\"text-align: right\"><font color=\"Green\">";
+  msg += sender + ": </font>" + decodeMSG(str) + "</div>";
   emit showMSG(msg);
   qDebug(logMyChat()) << "type:" << type << "read :" << str;
 }
 
 void myChat::process() {
-  chatSocket = new QUdpSocket();
+  chatSocket = new QUdpSocket(this);
   chatSocket->bind(QHostAddress::Any, _port);
   connect(chatSocket, SIGNAL(readyRead()), this, SLOT(read()));
+}
+
+QString myChat::decodeMSG(QString msg) {
+  QString msg_out;
+  foreach (QChar c, msg) { msg_out.append(decode(c.unicode(), 15)); }
+  return msg_out;
+}
+
+QString myChat::encodeMSG(QString msg) {
+  QString msg_out;
+  foreach (QChar c, msg) { msg_out.append(encode(c.unicode(), 15)); }
+  return msg_out;
 }
 
 void myChat::run() { m_running = true; }

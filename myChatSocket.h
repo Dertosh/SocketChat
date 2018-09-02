@@ -6,6 +6,7 @@
 #include <QLoggingCategory>
 #include <QObject>
 #include <QUdpSocket>
+#include "hamming.h"
 Q_DECLARE_LOGGING_CATEGORY(logMyChat)
 
 class myChat : public QObject {
@@ -18,6 +19,7 @@ class myChat : public QObject {
  signals:
   void ready();
   void showMSG(QString);
+  void showMSG(qint8, QString, QString);
   void showPersonalMSG(QString);
 
  public slots:
@@ -32,6 +34,9 @@ class myChat : public QObject {
   quint16 _port;      //порт сокета
   QString _nickname;  //Имя пользователя
   bool m_running;
+
+  QString decodeMSG(QString);
+  QString encodeMSG(QString);
 };
 
 #endif  // AUTHSOCKET_H
