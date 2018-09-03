@@ -6,6 +6,7 @@
 #include <QLoggingCategory>
 #include <QObject>
 #include <QUdpSocket>
+#include <QVector>
 #include "hamming.h"
 Q_DECLARE_LOGGING_CATEGORY(logMyChat)
 
@@ -35,8 +36,9 @@ class myChat : public QObject {
   QString _nickname;  //Имя пользователя
   bool m_running;
 
-  QString decodeMSG(QString);
-  QString encodeMSG(QString);
+  QString decodeMSG(QVector<uint32_t>);
+  QVector<uint32_t> encodeMSG(QString);
+  size_t checkMSG(QVector<uint32_t>);
 };
 
 #endif  // AUTHSOCKET_H

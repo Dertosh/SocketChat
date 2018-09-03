@@ -30,14 +30,14 @@ void printBin(int n) { printBin(n, 32); }
  * суммирование
  */
 
-int sum(int n) {
-  int s = 0;
-  int size = 33;
+uint32_t sum(uint32_t n) {
+  uint32_t s = 0;
+  uint32_t size = 33;
   while (--size) s += ((n >> size) & 1);
   return s;
 }
 
-int sumMod(int n) { return sum(n) & 1; }
+uint32_t sumMod(uint32_t n) { return sum(n) & 1; }
 
 int toBin(int n) {
   int save = 0;
@@ -69,7 +69,7 @@ size_t stringToBin(string str) {
  * кодирование
  */
 
-int encode(int number, int k) {
+uint32_t encode(uint32_t number, int k) {
   for (size_t i = 1, mask = ~0; i < k;
        mask <<= i, i <<= 1)  // mask - маска накладования на число
     number = (number & (~mask)) | ((number & mask) << 1);  //накладование маски
@@ -80,7 +80,7 @@ int encode(int number, int k) {
  * декодирование
  */
 
-int decode(int number, int k) {
+uint32_t decode(uint32_t number, int k) {
   for (size_t i = 0, mask = ((1 << 30) - 1); i < k; mask = mask << i,
               i = (i << 1) | 1) {  // mask - маска накладования на число
     number = (number & (~mask)) |
@@ -100,7 +100,7 @@ size_t hammingEncode2(size_t number, int k) {
   return number;
 }
 
-size_t hammingEncode(size_t number, int k) {
+uint32_t hammingEncode(uint32_t number, int k) {
   // k = int(log2(k + 1));
   for (char i = 0; i < k; i++)
     number = number | ((sumMod(number & mass[i])) << (1 << i) - 1);
@@ -123,9 +123,9 @@ size_t hammingCorrection1(size_t number, size_t k) {
   return number;
 }
 
-int hammingCheck(size_t number, int k) {
+uint16_t hammingCheck(uint16_t number, int k) {
   // k = log2(k + 1);
-  size_t check = 0;
+  uint16_t check = 0;
   for (char i = 0; i < k; i++)
     check = check | ((sumMod(number & mass[i])) << i);
   return check;

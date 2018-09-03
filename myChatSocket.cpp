@@ -2,7 +2,9 @@
 Q_LOGGING_CATEGORY(logMyChat, "myChat")
 
 myChat::myChat(QString nickname, quint16 port)
-    : _port(port), _nickname(nickname) {}
+    : _port(port), _nickname(nickname) {
+  test(15);
+}
 
 myChat::~myChat() {
   chatSocket->close();
@@ -47,8 +49,11 @@ void myChat::read() {
   in >> type;
   QString sender;
   in >> sender;
-  QString str;
+  QVector<uint32_t> str;
   in >> str;
+
+  qDebug(logMyChat()) << "Hcheck: " << checkMSG(str);
+
   QString msg;
   qDebug(logMyChat()) << "sender:_" << sender << ", nick:_" << _nickname << ".";
   if (QString::compare(sender, _nickname))
@@ -66,16 +71,28 @@ void myChat::process() {
   connect(chatSocket, SIGNAL(readyRead()), this, SLOT(read()));
 }
 
-QString myChat::decodeMSG(QString msg) {
+QString myChat::decodeMSG(QVector<uint32_t> msg) {
   QString msg_out;
-  foreach (QChar c, msg) { msg_out.append(decode(c.unicode(), 15)); }
+  foreach (QChar c, msg) { msg_out.append(decode(c.unicode(), 20)); }
   return msg_out;
 }
 
-QString myChat::encodeMSG(QString msg) {
-  QString msg_out;
-  foreach (QChar c, msg) { msg_out.append(encode(c.unicode(), 15)); }
+QVector<uint32_t> myChat::encodeMSG(QString msg) {
+  QVector<uint32_t> msg_out;
+  foreach (QChar c, msg) {
+    msg_out.append(int(hammingEncode(encode(c.unicode(), 20), 20)));
+  }
   return msg_out;
+}
+
+size_t myChat::checkMSG(QVector<uint32_t> msg) {
+  size_t check;
+  foreach (QChar c, msg) {
+    check += hammingCheck(c.unicode(), 20);
+    qDebug(logMyChat()) << "check " << c << ": "
+                        << hammingCheck(c.unicode(), 20);
+  }
+  return check;
 }
 
 void myChat::run() { m_running = true; }

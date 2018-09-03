@@ -26,9 +26,9 @@ void printBin(int n);
  * суммирование
  */
 
-int sum(int n);
+uint32_t sum(uint32_t n);
 
-int sumMod(int n);
+uint32_t sumMod(uint32_t n);
 
 int toBin(int n);
 
@@ -42,24 +42,24 @@ size_t stringToBin(string str);
  * кодирование
  */
 
-int encode(int number, int k);
+uint32_t encode(uint32_t number, int k);
 
 /*
  * декодирование
  */
 
-int decode(int number, int k);
+uint32_t decode(uint32_t number, int k);
 
 size_t hammingEncode2(size_t number, int k);
 
-const size_t mass[5] = {0x55555555, 0x66666666, 0x78787878, 0x7F807F80,
-                        0x7FFF8000};
+const uint16_t mass[5] = {0x55555555, 0x66666666, 0x78787878, 0x7F807F80,
+                          0x7FFF8000};
 
-size_t hammingEncode(size_t number, int k);
+uint32_t hammingEncode(uint32_t number, int k);
 
 size_t hammingCorrection1(size_t number, size_t k);
 
-int hammingCheck(size_t number, int k);
+uint16_t hammingCheck(uint16_t number, int k);
 
 size_t hammingCorrection(size_t number, size_t k);
 
