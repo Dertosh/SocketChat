@@ -91,41 +91,9 @@ uint32_t decode(uint32_t number, int k) {
   return number;
 }
 
-size_t hammingEncode2(size_t number, int k) {
-  for (size_t t = 1, mask = 0; t < k; t = t << 1, mask = 0) {
-    for (size_t i = 0, c = (1 << t) - 1; i <= (k / (t << 2)); i++)
-      mask = (mask << (t << 2)) | c;
-    mask = mask << t - 1;
-    number = number | ((sumMod(number & mask))
-                       << t - 1);  //накладование маски и суммирование
-  }
-  return number;
-}
-
 uint32_t hammingEncode(uint32_t number, int k) {
-  for (char i = 0; (1 << i) <= k; i++) {
-    // cout << "num "
-    //     << binToString(((sumMod(number & mass[i])) << (1 << i) - 1), 32)
-    //     << endl;
+  for (char i = 0; (1 << i) <= k; i++)
     number |= ((sumMod(number & mass[i])) << ((1 << i) - 1));
-    // cout << binToString(number, 32) << endl;
-  }
-  return number;
-}
-
-size_t hammingCorrection1(size_t number, size_t k) {
-  size_t check = 0;
-  for (size_t t = 1, x = 0, mask = 0; t < k; t = t << 1, mask = 0, x++) {
-    for (size_t i = 0, c = (1 << t) - 1; i <= (k / (t << 2)); i++)
-      mask = (mask << (t << 2)) | c;
-    mask = mask << t - 1;
-    check = check |
-            ((sumMod(number & mask)) << x);  //накладование маски и суммирование
-  }
-  if (check) {
-    size_t mask = 1 << (check - 1);
-    number = (mask | number) & (~(mask & number));
-  }
   return number;
 }
 

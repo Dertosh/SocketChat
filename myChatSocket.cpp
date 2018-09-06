@@ -54,14 +54,9 @@ void myChat::read() {
 
   qDebug(logMyChat()) << "Hcheck: " << checkMSG(str);
 
-  QString msg;
-  qDebug(logMyChat()) << "sender:_" << sender << ", nick:_" << _nickname << ".";
-  if (QString::compare(sender, _nickname))
-    msg = "<div style=\"text-align: left\"><font color=\"DarkBlue\">";
-  else
-    msg = "<div style=\"text-align: right\"><font color=\"Green\">";
-  msg += sender + ": </font>" + decodeMSG(str) + "</div>";
-  emit showMSG(msg);
+  // qDebug(logMyChat()) << "sender:_" << sender << ", nick:_" << _nickname <<
+  // ".";
+  emit showMSG(sender, decodeMSG(str));
   qDebug(logMyChat()) << "type:" << type << "read :" << str;
 }
 
@@ -73,25 +68,20 @@ void myChat::process() {
 
 QString myChat::decodeMSG(QVector<uint32_t> msg) {
   QString msg_out;
-  foreach (QChar c, msg) { msg_out.append(decode(c.unicode(), 20)); }
+  foreach (QChar c, msg) { msg_out.append(decode(c.unicode(), 21)); }
   return msg_out;
 }
 
 QVector<uint32_t> myChat::encodeMSG(QString msg) {
   QVector<uint32_t> msg_out;
-  foreach (QChar c, msg) {
-    msg_out.append(int(hammingEncode(encode(c.unicode(), 20), 20)));
-  }
+  foreach (QChar c, msg)
+    msg_out.append(int(hammingEncode(encode(c.unicode(), 21), 21)));
   return msg_out;
 }
 
 size_t myChat::checkMSG(QVector<uint32_t> msg) {
-  size_t check;
-  foreach (QChar c, msg) {
-    check += hammingCheck(c.unicode(), 20);
-    qDebug(logMyChat()) << "check " << c << ": "
-                        << hammingCheck(c.unicode(), 20);
-  }
+  size_t check = 0;
+  foreach (QChar c, msg) { check += hammingCheck(c.unicode(), 20); }
   return check;
 }
 

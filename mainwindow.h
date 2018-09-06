@@ -27,6 +27,7 @@ class MainWindow : public QMainWindow {
   void on_sendMSGButton_released();
 
   void on_lineMessege_editingFinished();
+  void printMSG(QString, QString);
   // void run(QString nikname, quint16 port);
 
  signals:
@@ -36,6 +37,7 @@ class MainWindow : public QMainWindow {
   Ui::MainWindow *ui;
   QThread chatTheard;
   SetSocketSettings *settings;
+  QString nickname = "user";
   bool _run = true;
 };
 

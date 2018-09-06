@@ -9,6 +9,7 @@ MainWindow::MainWindow(QString nickname, quint16 port, QWidget *parent)
 
   if (nickname.count() == 0) nickname = "Batman";
   if (port < 80) port = 7010;
+  this->nickname = nickname;
   QTextBrowser *mesgWindow = ui->mesgOut;
   myChat *chatSocket = new myChat(nickname, port);
   chatSocket->moveToThread(&chatTheard);
@@ -17,8 +18,8 @@ MainWindow::MainWindow(QString nickname, quint16 port, QWidget *parent)
   connect(&chatTheard, SIGNAL(finished()), chatSocket, SLOT(deleteLater()));
   connect(&chatTheard, SIGNAL(finished()), chatSocket, SLOT(stop()));
   connect(&chatTheard, SIGNAL(started()), chatSocket, SLOT(process()));
-  connect(chatSocket, SIGNAL(showMSG(QString)), ui->mesgOut,
-          SLOT(append(QString)));
+  connect(chatSocket, SIGNAL(showMSG(QString, QString)), this,
+          SLOT(printMSG(QString, QString)));
   // connect(chatSocket, SIGNAL(showMSG(QString)), ui->mesgOut, SLOT(app));
 
   chatTheard.start();
@@ -52,5 +53,16 @@ void MainWindow::on_lineMessege_editingFinished() {
     QString temp = ui->lineMessege->text();
     ui->lineMessege->clear();
     sendMSGClient(temp, 1);
+  }
+}
+
+void MainWindow::printMSG(QString sender, QString text) {
+  if (QString::compare(sender, nickname, Qt::CaseInsensitive) == 0) {
+    ui->mesgOut->append("<font color=\"Green\">" + sender + ": </font>" + text);
+    ui->mesgOut->setAlignment(Qt::AlignRight);
+  } else {
+    ui->mesgOut->append("<font color=\"DarkBlue\">" + sender + ": </font>" +
+                        text);
+    ui->mesgOut->setAlignment(Qt::AlignLeft);
   }
 }

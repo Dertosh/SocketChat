@@ -53,15 +53,11 @@ uint32_t encode(uint32_t number, int k);
 
 uint32_t decode(uint32_t number, int k);
 
-size_t hammingEncode2(size_t number, int k);
-
 const uint16_t mass[5] = {uint16_t(0x55555555), uint16_t(0x66666666),
                           uint16_t(0x78787878), uint16_t(0x7F807F80),
                           uint16_t(0x7FFF8000)};
 
 uint32_t hammingEncode(uint32_t number, int k);
-
-size_t hammingCorrection1(size_t number, size_t k);
 
 uint16_t hammingCheck(uint16_t number, int k);
 

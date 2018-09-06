@@ -20,7 +20,7 @@ class myChat : public QObject {
  signals:
   void ready();
   void showMSG(QString);
-  void showMSG(qint8, QString, QString);
+  void showMSG(QString, QString);
   void showPersonalMSG(QString);
 
  public slots:
