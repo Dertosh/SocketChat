@@ -1,14 +1,17 @@
+#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
 using namespace std;
 
+void mytest(int);
+
 /*
  * вывод в двоичном виде
  */
 
-string binToString(int n, size_t size);
+string binToString(uint32_t n, size_t size);
 
 /*
  * вывод в двоичном виде
@@ -52,8 +55,9 @@ uint32_t decode(uint32_t number, int k);
 
 size_t hammingEncode2(size_t number, int k);
 
-const uint16_t mass[5] = {0x55555555, 0x66666666, 0x78787878, 0x7F807F80,
-                          0x7FFF8000};
+const uint16_t mass[5] = {uint16_t(0x55555555), uint16_t(0x66666666),
+                          uint16_t(0x78787878), uint16_t(0x7F807F80),
+                          uint16_t(0x7FFF8000)};
 
 uint32_t hammingEncode(uint32_t number, int k);
 
@@ -61,7 +65,7 @@ size_t hammingCorrection1(size_t number, size_t k);
 
 uint16_t hammingCheck(uint16_t number, int k);
 
-size_t hammingCorrection(size_t number, size_t k);
+uint16_t hammingCorrection(uint16_t number, size_t k);
 
 size_t getBin(string text, string textError);
 

@@ -3,7 +3,7 @@ Q_LOGGING_CATEGORY(logMyChat, "myChat")
 
 myChat::myChat(QString nickname, quint16 port)
     : _port(port), _nickname(nickname) {
-  test(15);
+  test(21);
 }
 
 myChat::~myChat() {

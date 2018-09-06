@@ -6,7 +6,7 @@ size_t stringToBin(string str);
  * вывод в двоичном виде
  */
 
-string binToString(int n, size_t size) {
+string binToString(uint32_t n, size_t size) {
   string str = "";
   while (size--) str += 48 + ((n >> size) & 1);
   return str;
@@ -32,12 +32,14 @@ void printBin(int n) { printBin(n, 32); }
 
 uint32_t sum(uint32_t n) {
   uint32_t s = 0;
-  uint32_t size = 33;
-  while (--size) s += ((n >> size) & 1);
+  uint32_t size = 32;
+  while (size--) {
+    s += ((n >> size) & 1);
+  }
   return s;
 }
 
-uint32_t sumMod(uint32_t n) { return sum(n) & 1; }
+uint32_t sumMod(uint32_t n) { return (sum(n) & 1); }
 
 int toBin(int n) {
   int save = 0;
@@ -70,7 +72,7 @@ size_t stringToBin(string str) {
  */
 
 uint32_t encode(uint32_t number, int k) {
-  for (size_t i = 1, mask = ~0; i < k;
+  for (uint32_t i = 1, mask = ~0; i < k;
        mask <<= i, i <<= 1)  // mask - маска накладования на число
     number = (number & (~mask)) | ((number & mask) << 1);  //накладование маски
   return number;
@@ -81,7 +83,7 @@ uint32_t encode(uint32_t number, int k) {
  */
 
 uint32_t decode(uint32_t number, int k) {
-  for (size_t i = 0, mask = ((1 << 30) - 1); i < k; mask = mask << i,
+  for (size_t i = 0, mask = ~0; i < k; mask = mask << i,
               i = (i << 1) | 1) {  // mask - маска накладования на число
     number = (number & (~mask)) |
              ((number & (mask << 1)) >> 1);  //накладование маски
@@ -101,9 +103,13 @@ size_t hammingEncode2(size_t number, int k) {
 }
 
 uint32_t hammingEncode(uint32_t number, int k) {
-  // k = int(log2(k + 1));
-  for (char i = 0; i < k; i++)
-    number = number | ((sumMod(number & mass[i])) << (1 << i) - 1);
+  for (char i = 0; (1 << i) <= k; i++) {
+    // cout << "num "
+    //     << binToString(((sumMod(number & mass[i])) << (1 << i) - 1), 32)
+    //     << endl;
+    number |= ((sumMod(number & mass[i])) << ((1 << i) - 1));
+    // cout << binToString(number, 32) << endl;
+  }
   return number;
 }
 
@@ -126,18 +132,17 @@ size_t hammingCorrection1(size_t number, size_t k) {
 uint16_t hammingCheck(uint16_t number, int k) {
   // k = log2(k + 1);
   uint16_t check = 0;
-  for (char i = 0; i < k; i++)
-    check = check | ((sumMod(number & mass[i])) << i);
+  for (char i = 0; (1 << i) <= k; i++)
+    check |= ((sumMod(number & mass[i])) << i);
   return check;
 }
 
-size_t hammingCorrection(size_t number, size_t k) {
+uint16_t hammingCorrection(uint16_t number, size_t k) {
   size_t check = hammingCheck(number, k);
-  // cout << "check = " << check << endl;
+  // cout << "check = " << check << " bin = " << binToString(size_t(check), 16)
+  //     << endl;
   if (check) {
-    size_t mask = 1 << (check - 1);
-    // number = (mask | number) & (~(mask&number));
-    number ^= mask;
+    number ^= (1 << (check - 1));
   }
   return number;
 }
@@ -177,25 +182,46 @@ void printTableLine(string str, string str1, size_t size) {
   cout << "| " << str << spaces << " | " << str1 << " |" << endl;
 }
 
+void mytest(int k) {
+  uint32_t bin = 2046;
+  uint32_t error = 1 << 13;
+  cout << binToString(bin, 32) << endl;
+  bin = encode(bin, k);
+  cout << "encode " << binToString(bin, 32) << endl;
+  bin = hammingEncode(bin, k);
+  cout << "hammingEncode     " << binToString(bin, 32) << endl;
+  bin = (error | bin) & (~(error & bin));
+  cout << "hammingError      " << binToString(bin, 32) << " " << log2(error) + 1
+       << " " << binToString(error, 32) << endl;
+  bin = hammingCorrection(bin, k);
+  cout << "hammingCorrection " << binToString(bin, 32) << endl;
+  bin = decode(bin, k);
+  cout << "bin=" << bin << " " << binToString(bin, 32) << endl;
+}
+
 void test(int k) {
   cout << "Test start" << endl;
-  size_t bin = 0;
-  for (size_t error = 1; error < 16384; error = error << 1)
-    for (size_t i = 0; i < 2048; i++) {
+  uint32_t bin = 0;
+  for (uint32_t error = 1; error < 16384; error <<= 1)
+    for (uint32_t i = 0; i < 2048; i++) {
       bin = i;
+      // cout << "i " << binToString(bin, 32) << endl;
       bin = encode(bin, k);
-      // cout << "encode " << binToString(bin, 30) << endl;
+      // cout << "encode " << binToString(bin, 32) << endl;
       bin = hammingEncode(bin, k);
-      // cout << "hammingEncode     " << binToString(bin, 30) << endl;
+      // cout << "hammingEncode     " << binToString(bin, 32) << endl;
       bin = (error | bin) & (~(error & bin));
-      // cout << "hammingError      " << binToString(bin, 30) << endl;
+      // cout << "hammingError      " << binToString(bin, 30) << " "
+      //     << log2(error) + 1 << " " << binToString(error, 30) << endl;
       bin = hammingCorrection(bin, k);
       // cout << "hammingCorrection " << binToString(bin, 30) << endl<<endl;
       bin = decode(bin, k);
-      if (bin != i)
-        cout << "ошибка : " << binToString(bin, 30) << " " << binToString(i, 30)
+      if (bin != i) {
+        cout << "bin=" << bin << ", i=" << i << endl;
+        cout << "ошибка : " << binToString(bin, 32) << " " << binToString(i, 32)
              << endl
              << endl;
+      }
     }
   cout << "Test end" << endl;
 }
@@ -266,23 +292,25 @@ int cat() {
   cout << endl;
 
   printTableCloseLine(sizeLine + k);
-  printTableLine("Исходная последовательность", binToString(bin, k), sizeLine);
+  // printTableLine("Исходная последовательность", binToString(bin, k),
+  // sizeLine);
   printTableLine(sizeLine + k);
 
   bin = encode(bin, k);
   bin = hammingEncode(bin, k);
 
-  printTableLine("Закодированная последовательность", binToString(bin, k),
-                 sizeLine);
+  // printTableLine("Закодированная последовательность", binToString(bin, k),
+  //               sizeLine);
   printTableLine(sizeLine + k);
 
-  printTableLine("Введенная ошибка", binToString(error, k), sizeLine);
+  // printTableLine("Введенная ошибка", binToString(error, k), sizeLine);
   printTableLine(sizeLine + k);
 
   // bin = (error | bin) & (~(error&bin)); //
   bin ^= error;
 
-  printTableLine("Последовательность c ошибкой", binToString(bin, k), sizeLine);
+  // printTableLine("Последовательность c ошибкой", binToString(bin, k),
+  // sizeLine);
   printTableLine(sizeLine + k);
 
   int check = hammingCheck(bin, k);
@@ -292,14 +320,14 @@ int cat() {
 
   bin = hammingCorrection(bin, k);
 
-  printTableLine("Исправленная последовательность", binToString(bin, k),
-                 sizeLine);
+  // printTableLine("Исправленная последовательность", binToString(bin, k),
+  //               sizeLine);
   printTableLine(sizeLine + k);
 
   bin = decode(bin, k);
 
-  printTableLine("Декодированная последовательность", binToString(bin, k),
-                 sizeLine);
+  // printTableLine("Декодированная последовательность", binToString(bin, k),
+  //               sizeLine);
   printTableLine(sizeLine + k);
 
   printTableLine("Ci^n Общее число ошибок данной кратности", setw(line[1], k),
