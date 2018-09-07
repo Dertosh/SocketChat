@@ -69,7 +69,7 @@ void myChat::process() {
 QString myChat::decodeMSG(QVector<uint32_t> msg) {
   QString msg_out;
   foreach (QChar c, msg) {
-    msg_out.append(hammingCorrection(decode(c.unicode(), 21), 21));
+    msg_out.append(decode(hammingCorrection(c.unicode(), 21), 21));
   }
   return msg_out;
 }
@@ -83,7 +83,7 @@ QVector<uint32_t> myChat::encodeMSG(QString msg) {
 
 size_t myChat::checkMSG(QVector<uint32_t> msg) {
   size_t check = 0;
-  foreach (QChar c, msg) { check += hammingCheck(c.unicode(), 20); }
+  foreach (QChar c, msg) { check += hammingCheck(c.unicode(), 21); }
   return check;
 }
 
