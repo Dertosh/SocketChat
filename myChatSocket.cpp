@@ -68,7 +68,9 @@ void myChat::process() {
 
 QString myChat::decodeMSG(QVector<uint32_t> msg) {
   QString msg_out;
-  foreach (QChar c, msg) { msg_out.append(decode(c.unicode(), 21)); }
+  foreach (QChar c, msg) {
+    msg_out.append(hammingCorrection(decode(c.unicode(), 21), 21));
+  }
   return msg_out;
 }
 
