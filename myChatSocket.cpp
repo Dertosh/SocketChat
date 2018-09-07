@@ -1,8 +1,10 @@
 ﻿#include "myChatSocket.h"
 Q_LOGGING_CATEGORY(logMyChat, "myChat")
 
-myChat::myChat(QString nickname, quint16 port)
-    : _port(port), _nickname(nickname) {
+myChat::myChat(QString nickname, quint16 port, QNetworkInterface interface)
+    : _port(port),
+      _nickname(nickname),
+      brd(interface.addressEntries().first().broadcast()) {
   test(21);
 }
 
@@ -22,7 +24,7 @@ void myChat::send(QString str, qint8 typeMSG) {
   out << encodeMSG(str);
   out.device()->seek(qint64(0));
   out << qint64(data.size() - sizeof(qint64));
-  chatSocket->writeDatagram(data, QHostAddress::Broadcast, _port);
+  chatSocket->writeDatagram(data, brd, _port);
   qDebug(logMyChat()) << "Sended";
 }
 
@@ -63,6 +65,7 @@ void myChat::read() {
 void myChat::process() {
   chatSocket = new QUdpSocket(this);
   chatSocket->bind(QHostAddress::Any, _port);
+  // chatSocket->setMulticastInterface(_interface);
   connect(chatSocket, SIGNAL(readyRead()), this, SLOT(read()));
 }
 

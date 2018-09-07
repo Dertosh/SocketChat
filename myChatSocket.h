@@ -4,6 +4,7 @@
 #include <QDataStream>
 #include <QEventLoop>
 #include <QLoggingCategory>
+#include <QNetworkInterface>
 #include <QObject>
 #include <QUdpSocket>
 #include <QVector>
@@ -14,7 +15,7 @@ class myChat : public QObject {
   Q_OBJECT
 
  public:
-  myChat(QString nickname, quint16 port);
+  myChat(QString nickname, quint16 port, QNetworkInterface interface);
   ~myChat();
 
  signals:
@@ -34,6 +35,7 @@ class myChat : public QObject {
   QUdpSocket *chatSocket = nullptr;  //Сокет для приема и передачи сообщений
   quint16 _port;      //порт сокета
   QString _nickname;  //Имя пользователя
+  QHostAddress brd;
   bool m_running;
 
   QString decodeMSG(QVector<uint32_t>);
