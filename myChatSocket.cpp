@@ -11,6 +11,8 @@ myChat::~myChat() {
   qDebug(logMyChat()) << "close";
 };
 
+void myChat::send(qint8 typeMSG) { emit send("", typeMSG); }
+
 void myChat::send(QString str, qint8 typeMSG) {
   qDebug(logMyChat()) << "port" << QString::number(chatSocket->localPort());
   qDebug(logMyChat()) << "Sending...";
@@ -19,7 +21,7 @@ void myChat::send(QString str, qint8 typeMSG) {
   out << qint64(0);
   out << qint8(typeMSG);
   out << _nickname;
-  out << encodeMSG(str);
+  if (typeMSG == 1) out << encodeMSG(str);
   out.device()->seek(qint64(0));
   out << qint64(data.size() - sizeof(qint64));
   chatSocket->writeDatagram(data, brd, _port);

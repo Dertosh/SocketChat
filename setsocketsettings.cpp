@@ -14,8 +14,7 @@ SetSocketSettings::SetSocketSettings(QWidget *parent)
     if (flags.testFlag(QNetworkInterface::IsRunning) &&
         flags.testFlag(QNetworkInterface::IsUp) &&
         !flags.testFlag(QNetworkInterface::IsLoopBack) && interface.isValid() &&
-        !flags.testFlag(QNetworkInterface::IsPointToPoint) &&
-        (interface.type() != QNetworkInterface::Virtual))
+        !flags.testFlag(QNetworkInterface::IsPointToPoint))
       foreach (QNetworkAddressEntry entry, interface.addressEntries()) {
         if (interface.hardwareAddress() != "00:00:00:00:00:00" &&
             entry.ip().toString().contains(".")) {

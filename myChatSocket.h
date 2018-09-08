@@ -26,6 +26,7 @@ class myChat : public QObject {
 
  public slots:
   void send(QString str, qint8 typeMSG);
+  void send(qint8 typeMSG);
   void read();
   void process();
   void stop();

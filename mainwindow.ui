@@ -90,7 +90,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>SocketChat</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -132,6 +132,9 @@
           <family>Calibri Light</family>
           <pointsize>14</pointsize>
          </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::WheelFocus</enum>
         </property>
        </widget>
       </item>
