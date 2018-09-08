@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
 #endif
 
   QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-  qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+  // qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
   QApplication a(argc, argv);
   // qDebug() << qApp->primaryScreen()->devicePixelRatio();
   // qDebug() << qApp->primaryScreen()->logicalDotsPerInch();
@@ -26,6 +26,7 @@ int main(int argc, char* argv[]) {
   bool loadMainWindow = false;
   QString nickname = "Batman";
   quint16 port = 7010;
+  QNetworkInterface interface;
   if (argc < 2) {
     qDebug() << "show\n";
     SetSocketSettings settings;
@@ -34,21 +35,24 @@ int main(int argc, char* argv[]) {
     font.setPixelSize(40);
     settings.setFont(font);
 
-    // QObject::connect(&settings, SIGNAL(accepted()), &window, SLOT(show()));
-    // QObject::connect(&settings, SIGNAL(rejected()), &window,
-    //                 SLOT(deleteLater()));
     settings.show();
-    // qDebug() << "settings.exec() =" << settings.exec();
+
     if (settings.exec() != QDialog::Rejected) {
       loadMainWindow = true;
       nickname = settings.getNickname();
       port = settings.getPort();
+      interface = settings.getInterface();
+      emit settings.deleteLater();
     };
   }
   qDebug() << loadMainWindow;
   if (loadMainWindow) {
+    if (nickname.count() == 0) nickname = "Batman";
+    if (port < 80) port = 7010;
     MainWindow window(nickname, port);
+    window.startSocket(nickname, port, interface);
     window.show();
+    qDebug() << "exit";
     return a.exec();
   }
   return 0;

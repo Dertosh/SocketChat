@@ -6,6 +6,25 @@ SetSocketSettings::SetSocketSettings(QWidget *parent)
   ui->setupUi(this);
   ui->nicknameLineEdit->setText("Batman");
   ui->portLineEdit->setText("7010");
+
+  QNetworkInterface::InterfaceFlags flags;
+
+  foreach (QNetworkInterface interface, QNetworkInterface::allInterfaces()) {
+    flags = interface.flags();
+    if (flags.testFlag(QNetworkInterface::IsRunning) &&
+        flags.testFlag(QNetworkInterface::IsUp) &&
+        !flags.testFlag(QNetworkInterface::IsLoopBack) && interface.isValid() &&
+        !flags.testFlag(QNetworkInterface::IsPointToPoint) &&
+        (interface.type() != QNetworkInterface::Virtual))
+      foreach (QNetworkAddressEntry entry, interface.addressEntries()) {
+        if (interface.hardwareAddress() != "00:00:00:00:00:00" &&
+            entry.ip().toString().contains(".")) {
+          ui->interfaceComboBox->addItem(interface.humanReadableName());
+          interfaceList.append(interface);
+        }
+      }
+  }
+
   connect(this, SIGNAL(rejected()), this, SLOT(setFalseSolution()));
   // connect(this, SLOT(reject()), this, SIGNAL(closeApp()));
 }
@@ -26,4 +45,8 @@ QString SetSocketSettings::getNickname() {
 
 quint16 SetSocketSettings::getPort() {
   return ui->portLineEdit->text().toLong();
+}
+
+QNetworkInterface SetSocketSettings::getInterface() {
+  return interfaceList.takeAt(ui->interfaceComboBox->currentIndex());
 }

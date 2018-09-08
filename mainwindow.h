@@ -21,13 +21,15 @@ class MainWindow : public QMainWindow {
   explicit MainWindow(QString nickname, quint16 port,
                       QWidget *parent = nullptr);
   ~MainWindow();
-
+ public slots:
+  void startSocket(QString, quint16, QNetworkInterface);
  private slots:
   // void addText(QString);
   void on_sendMSGButton_released();
 
   void on_lineMessege_editingFinished();
   void printMSG(QString, QString);
+
   // void run(QString nikname, quint16 port);
 
  signals:
@@ -35,10 +37,10 @@ class MainWindow : public QMainWindow {
 
  private:
   Ui::MainWindow *ui;
-  QThread chatTheard;
   SetSocketSettings *settings;
   QString nickname = "user";
   bool _run = true;
+  QThread chatTheard;
 };
 
 #endif  // MAINWINDOW_H

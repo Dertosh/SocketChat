@@ -4,9 +4,7 @@ Q_LOGGING_CATEGORY(logMyChat, "myChat")
 myChat::myChat(QString nickname, quint16 port, QNetworkInterface interface)
     : _port(port),
       _nickname(nickname),
-      brd(interface.addressEntries().first().broadcast()) {
-  test(21);
-}
+      brd(interface.addressEntries().first().broadcast()) {}
 
 myChat::~myChat() {
   chatSocket->close();
@@ -37,7 +35,6 @@ void myChat::read() {
     return;
   }
   datagram.resize(chatSocket->pendingDatagramSize());
-  // QHostAddress *address = new QHostAddress();
   chatSocket->readDatagram(datagram.data(), datagram.size());
   QDataStream in(&datagram, QIODevice::ReadOnly);
 
@@ -89,6 +86,10 @@ size_t myChat::checkMSG(QVector<uint32_t> msg) {
   foreach (QChar c, msg) { check += hammingCheck(c.unicode(), 21); }
   return check;
 }
+
+QString myChat::getNickname() { return _nickname; }
+
+quint16 myChat::getPort() { return _port; }
 
 void myChat::run() { m_running = true; }
 void myChat::stop() { m_running = false; }

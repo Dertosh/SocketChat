@@ -2,6 +2,7 @@
 #define SETSOCKETSETTINGS_H
 
 #include <QDialog>
+#include <QNetworkInterface>
 
 namespace Ui {
 class setSocketSettings;
@@ -19,6 +20,7 @@ class SetSocketSettings : public QDialog {
   void setFalseSolution();
   QString getNickname();
   quint16 getPort();
+  QNetworkInterface getInterface();
 
  signals:
   void closeApp();
@@ -31,6 +33,7 @@ class SetSocketSettings : public QDialog {
  private:
   Ui::setSocketSettings *ui;
   bool _solution;
+  QList<QNetworkInterface> interfaceList;
 };
 
 #endif  // SETSOCKETSETTINGS_H

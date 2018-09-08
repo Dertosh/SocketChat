@@ -159,7 +159,7 @@ void mytest(int k) {
   bin = hammingEncode(bin, k);
   cout << "hammingEncode     " << binToString(bin, 32) << endl;
   bin = (error | bin) & (~(error & bin));
-  cout << "hammingError      " << binToString(bin, 32) << " " << log2(error) + 1
+  cout << "hammingError      " << binToString(bin, 32) << " " << log(error) + 1
        << " " << binToString(error, 32) << endl;
   bin = hammingCorrection(bin, k);
   cout << "hammingCorrection " << binToString(bin, 32) << endl;

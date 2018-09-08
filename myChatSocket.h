@@ -31,6 +31,9 @@ class myChat : public QObject {
   void stop();
   void run();
 
+  QString getNickname();
+  quint16 getPort();
+
  private:
   QUdpSocket *chatSocket = nullptr;  //Сокет для приема и передачи сообщений
   quint16 _port;      //порт сокета
