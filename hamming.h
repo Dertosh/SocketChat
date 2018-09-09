@@ -59,7 +59,7 @@ const uint16_t mass[5] = {uint16_t(0x55555555), uint16_t(0x66666666),
 
 uint32_t hammingEncode(uint32_t number, int k);
 
-uint16_t hammingCheck(uint16_t number, int k);
+uint16_t hammingCheck(uint32_t number, int k);
 
 uint16_t hammingCorrection(uint16_t number, size_t k);
 

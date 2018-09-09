@@ -5,8 +5,8 @@
 
 int main(int argc, char* argv[]) {
 #ifdef Q_OS_WIN32
-  QTextCodec* codec = QTextCodec::codecForName("Windows-1251");
-  QTextCodec::setCodecForLocale(codec);
+  // QTextCodec* codec = QTextCodec::codecForName("Windows-1251");
+  // QTextCodec::setCodecForLocale(codec);
 #endif
 
   QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -28,13 +28,13 @@ int main(int argc, char* argv[]) {
   quint16 port = 7010;
   QNetworkInterface interface;
   if (argc < 2) {
-    qDebug() << "show\n";
     SetSocketSettings settings;
     font = settings.font();
     // qDebug() << "PixelSize" << font.pixelSize();
     font.setPixelSize(40);
     settings.setFont(font);
 
+    qDebug() << "show\n";
     settings.show();
 
     if (settings.exec() != QDialog::Rejected) {

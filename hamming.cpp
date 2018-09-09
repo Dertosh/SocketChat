@@ -97,7 +97,7 @@ uint32_t hammingEncode(uint32_t number, int k) {
   return number;
 }
 
-uint16_t hammingCheck(uint16_t number, int k) {
+uint16_t hammingCheck(uint32_t number, int k) {
   // k = log2(k + 1);
   uint16_t check = 0;
   for (char i = 0; (1 << i) <= k; i++)

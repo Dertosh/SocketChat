@@ -4,7 +4,8 @@ Q_LOGGING_CATEGORY(logMyChat, "myChat")
 myChat::myChat(QString nickname, quint16 port, QNetworkInterface interface)
     : _port(port),
       _nickname(nickname),
-      brd(interface.addressEntries().first().broadcast()) {}
+      brd(interface.addressEntries().first().broadcast()) {
+}  //сохраняем бродкаст адресс
 
 myChat::~myChat() {
   chatSocket->close();
@@ -14,7 +15,8 @@ myChat::~myChat() {
 void myChat::send(qint8 typeMSG) { emit send("", typeMSG); }
 
 void myChat::send(QString str, qint8 typeMSG) {
-  qDebug(logMyChat()) << "port" << QString::number(chatSocket->localPort());
+  qDebug(logMyChat()) << "port" << QString::number(chatSocket->localPort())
+                      << "type " << typeMSG;
   qDebug(logMyChat()) << "Sending...";
   QByteArray data;
   QDataStream out(&data, QIODevice::WriteOnly);
@@ -51,20 +53,27 @@ void myChat::read() {
   QString sender;
   in >> sender;
   QVector<uint32_t> str;
-  in >> str;
-
-  qDebug(logMyChat()) << "Hcheck: " << checkMSG(str);
-
-  // qDebug(logMyChat()) << "sender:_" << sender << ", nick:_" << _nickname <<
-  // ".";
-  emit showMSG(sender, decodeMSG(str));
-  qDebug(logMyChat()) << "type:" << type << "read :" << str;
+  switch (type) {
+    case 1:
+      in >> str;
+      qDebug(logMyChat()) << "Hcheck: " << checkMSG(str);
+      emit showMSG(sender, decodeMSG(str));
+      qDebug(logMyChat()) << "type:" << type << "read :" << str;
+      break;
+    case 2:
+      qDebug(logMyChat()) << "type:" << type << "TEST";
+      break;
+    default:
+      qDebug(logMyChat()) << "type:" << type << "ERROR";
+      break;
+  }
 }
 
 void myChat::process() {
   chatSocket = new QUdpSocket(this);
-  chatSocket->bind(QHostAddress::Any, _port);
-  // chatSocket->setMulticastInterface(_interface);
+  chatSocket->bind(
+      QHostAddress::Any,
+      _port);  //закрепляем за сокетом адресс и порт для прослушивания
   connect(chatSocket, SIGNAL(readyRead()), this, SLOT(read()));
 }
 
@@ -79,7 +88,7 @@ QString myChat::decodeMSG(QVector<uint32_t> msg) {
 QVector<uint32_t> myChat::encodeMSG(QString msg) {
   QVector<uint32_t> msg_out;
   foreach (QChar c, msg)
-    msg_out.append(int(hammingEncode(encode(c.unicode(), 21), 21)));
+    msg_out.append(hammingEncode(encode(c.unicode(), 21), 21));
   return msg_out;
 }
 
