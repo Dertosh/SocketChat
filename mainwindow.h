@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow {
                       QWidget *parent = nullptr);
   ~MainWindow();
  public slots:
-  void startSocket(QString, quint16, QNetworkInterface);
+  void startSocket(QString, quint16, QNetworkInterface &);
  private slots:
   // void addText(QString);
   void on_sendMSGButton_released();

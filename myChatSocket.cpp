@@ -1,13 +1,18 @@
 ﻿#include "myChatSocket.h"
 Q_LOGGING_CATEGORY(logMyChat, "myChat")
 
-myChat::myChat(QString nickname, quint16 port, QNetworkInterface interface)
-    : _port(port),
-      _nickname(nickname),
-      brd(interface.addressEntries().first().broadcast()) {
+myChat::myChat(QString nickname, quint16 port, QNetworkInterface &interface)
+    : _port(port), _nickname(nickname) {
+  foreach (QNetworkAddressEntry address, interface.addressEntries()) {
+    if (address.broadcast().toString().contains(".255")) {
+      brd = address.broadcast();
+      break;
+    }
+  }
 }  //сохраняем бродкаст адресс
 
 myChat::~myChat() {
+  chatSocket->disconnectFromHost();
   chatSocket->close();
   qDebug(logMyChat()) << "close";
 };
@@ -15,9 +20,10 @@ myChat::~myChat() {
 void myChat::send(qint8 typeMSG) { emit send("", typeMSG); }
 
 void myChat::send(QString str, qint8 typeMSG) {
+  qDebug(logMyChat()) << "Sending...";
+  qDebug(logMyChat()) << "broadcast: " << brd.toString();
   qDebug(logMyChat()) << "port" << QString::number(chatSocket->localPort())
                       << "type " << typeMSG;
-  qDebug(logMyChat()) << "Sending...";
   QByteArray data;
   QDataStream out(&data, QIODevice::WriteOnly);
   out << qint64(0);

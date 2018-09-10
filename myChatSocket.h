@@ -15,7 +15,7 @@ class myChat : public QObject {
   Q_OBJECT
 
  public:
-  myChat(QString nickname, quint16 port, QNetworkInterface interface);
+  myChat(QString nickname, quint16 port, QNetworkInterface &interface);
   ~myChat();
 
  signals:

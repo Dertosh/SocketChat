@@ -5,7 +5,10 @@ SetSocketSettings::SetSocketSettings(QWidget *parent)
     : QDialog(parent), ui(new Ui::setSocketSettings) {
   ui->setupUi(this);
   ui->nicknameLineEdit->setText("Batman");
-  ui->portLineEdit->setText("7010");
+  ui->portLineEdit->setText("50000");
+  ui->portLineEdit->setValidator(new QIntValidator(
+      49152, 65535, this));  //содержит динамически выделяемые или частные
+                             //порты, которые не регистрируются IANA
 
   QNetworkInterface::InterfaceFlags flags;
 

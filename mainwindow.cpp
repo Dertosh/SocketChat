@@ -43,7 +43,7 @@ void MainWindow::printMSG(QString sender, QString text) {
 }
 
 void MainWindow::startSocket(QString nickname, quint16 port,
-                             QNetworkInterface interface) {
+                             QNetworkInterface &interface) {
   this->nickname = nickname;
 
   myChat *chatSocket = new myChat(nickname, port, interface);
